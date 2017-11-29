@@ -9,39 +9,57 @@ class AffoController extends AffoApplication
 		$this->reflection = new ReflectionObject($this);
 		$this->name = str_replace('Controller', '', $this->reflection->name);
 		$this->var = array();
+		$this->get_vars = array();
 	}
 
 	function set($key, $value) {
 		$this->var[$key] = $value;
 	}
-
+	private function setGetVars() {
+		$query = explode('&', parse_url($_SERVER['REQUEST_URI'])['query']);
+		foreach ($query as $q) {
+			$q = explode('=', $q);
+			$this->get_vars[$q[0]] = true;
+			if (isset($q[1])) {
+				$this->get_vars[$q[0]] = $q[1];
+			}
+		}
+	}
+	function QGET($search) {
+		if ($this->get_vars[$search] !== NULL) {
+			return $this->get_vars[$search];
+		}
+		else {
+			return NULL;
+		}
+	}
 	function routeCheck($action, $args) {
 		if (!method_exists($this, uriTo($action, 'action'))) {
-			// give 404 error
-			// send headers(404)
+			header("Status: 404 Not Found");
 			die("ERROR: NO MATCING ACTION");
 		}
 		$reflection = new ReflectionMethod($this, uriTo($action, 'action'));
 		if($reflection->getNumberOfRequiredParameters() != sizeof($args)) {
 			// give 404 error
-			// send headers(404)
+			header("Status: 404 Not Found");
 			die("ERROR: NUM PARAMETERS DO NOT MATCH");
 		}
 		$file = uriTo($action, 'view');
 		if (!file_exists(APPS . "/{$this->name}/{$file}")) {
 			// give error no view
 			// log as internal error
-			// send headers(404)
+			header("Status: 404 Not Found");
 			die("ERROR: NO VIEW");
 		}
 	}
 
 	function route($action, $args=array()) {
 		$this->routeCheck($action, $args);
+		$this->setGetVars();
+		header("HTTP/1.1 200 OK");
 		call_user_method_array(uriTo($action, 'action'), $this, $args);
 		$file = uriTo($action, 'view');
 		$this->viewFile("/{$this->name}/{$file}", $this->var);
-		
 	}
 	function viewFile($d23487534798, $vars) {
 		// globalize vars and keep access to $this

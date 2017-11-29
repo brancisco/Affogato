@@ -15,9 +15,6 @@ foreach ($custom_routes as $app => $info) {
 			include APPS . "/{$info['path']}";
 			exit();
 		}
-		// else if (isset($info['action'])) {
-		// 		maybe implement later
-		// }
 		else {
 			include APPS . "/{$app}/{$app}Controller.php";
 			$class = "{$app}Controller";
@@ -35,8 +32,7 @@ $app_file = uriTo($data['app'], 'app_file');
 $class    = uriTo($data['app'], 'app_class');
 $file_name = APPS . "/{$data['app']}/{$app_file}";
 if (!file_exists($file_name)) {
-	// internal error no class
-	// headers(404)
+	header("Status: 404 Not Found");
 	die("ERROR: NO MATCHING APP FOUND");
 }
 else {
