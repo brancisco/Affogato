@@ -1,8 +1,7 @@
 <?php
 require ROOT . '/Affogato/AffoApplication.php';
 require ROOT . '/Affogato/AffoController.php';
-
-$route = preg_replace('/^\//', '', $_SERVER['REQUEST_URI']);
+$route = parse_url(preg_replace('/^\//', '', $_SERVER['REQUEST_URI']))['path'];
 $route_parts = explode('/', preg_replace('/\/$/', '', $route));
 $custom_routes = json_decode(CUSTOM_ROUTES, true);
 $args = array();
@@ -32,17 +31,17 @@ foreach ($custom_routes as $app => $info) {
 // default routing
 $data = array('app' => '', 'action' => 'index', 'args' => array());
 $data = defaultRouting($route_parts, $data);
-$file_name = APPS . "/{$data['app']}/{$data['app']}Controller.php";
+$app_file = uriTo($data['app'], 'app_file');
+$class    = uriTo($data['app'], 'app_class');
+$file_name = APPS . "/{$data['app']}/{$app_file}";
 if (!file_exists($file_name)) {
-	echo "ERROR: 404";
 	// internal error no class
 	// headers(404)
+	die("ERROR: NO MATCHING APP FOUND");
 }
 else {
 	include $file_name;
-	$class = "{$data['app']}Controller";
 	$application = new $class();
 	$application->route($data['action'], $data['args']);
 }
-exit();
 ?>
