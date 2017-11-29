@@ -8,19 +8,29 @@ class AffoController extends AffoApplication
 	{
 		$this->reflection = new ReflectionObject($this);
 		$this->name = str_replace('Controller', '', $this->reflection->name);
+		$this->var = array();
 	}
 
-	function route($action, $args) {
-		if (method_exists($this, $action)) {
+	function set($key, $value) {
+		$this->var[$key] = $value;
+	}
+	function route($action, $args=array()) {
+		if (!method_exists($this, $action)) {
+			// give 404 error
+			// send headers(404)
+			echo "ERROR: NO MATCING ACTION";
+		}
+		else {
 			$reflection = new ReflectionMethod($this, $action);
 			if($reflection->getNumberOfRequiredParameters() != sizeof($args)) {
 				// give 404 error
 				// send headers(404)
-				echo "ERROR: NOT ENOUGH PARAMETERS";
+				echo "ERROR: NUM PARAMETERS DO NOT MATCH";
 			}
 			else {
 				call_user_method_array($action, $this, $args);
-				if (!file_exists(APPS . "/{$this->name}/{$action}.php")) {
+				$file = formatActionAsFile($action);
+				if (!file_exists(APPS . "/{$this->name}/{$file}")) {
 					// give error no view
 					// log as internal error
 					// send headers(404)
@@ -29,10 +39,14 @@ class AffoController extends AffoApplication
 					
 				else {
 					// found: send headers(200)
-					include APPS . "/{$this->name}/{$action}.php";
+					foreach ($this->var as $key => $value) {
+						$$key = $value;
+					}
+					include APPS . "/{$this->name}/{$file}";
 				}
 			}
 		}
+
 	}
 }
 ?>
