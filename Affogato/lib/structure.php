@@ -17,8 +17,9 @@ function uriTo($uri, $type) {
 }
 
 function uriValid($uri, $type) {
-	if (!($type == 'app' || $type == 'action' || $type == 'param')) {
-		return $uri;
+	if (!($type == 'app' || $type == 'action' || $type == 'param' ||
+		  $type == 'app_class' || $type == 'app_file' || $type == 'view')) {
+		return false;
 	}
 	global $DEFAULT_ROUTING;
 	$route = $DEFAULT_ROUTING[$type];
@@ -31,12 +32,30 @@ function defaultRouting($route_array, $data, $index = 0) {
 	}
 	$uri = array_shift($route_array);
 	if($index == 0) {
+		if(!uriValid($uri, 'app')) {
+			header("Status: 404 Not Found");
+			// pass correct error for logging
+			errorHandler('1');
+			exit();
+		}
 		$data['app'] = uriTo($uri, 'app');
 	}
 	else if ($index == 1) {
+		if(!uriValid($uri, 'action')) {
+			header("Status: 404 Not Found");
+			// pass correct error for logging
+			errorHandler('1');
+			exit();
+		}
 		$data['action'] = $uri;
 	}
 	else {
+		if(!uriValid($uri, 'param')) {
+			header("Status: 404 Not Found");
+			// pass correct error for logging
+			errorHandler('1');
+			exit();
+		}
 		array_push($data['args'], $uri);
 	}
 	return defaultRouting($route_array, $data, $index+1);

@@ -5,7 +5,6 @@ $route = parse_url(preg_replace('/^\//', '', $_SERVER['REQUEST_URI']))['path'];
 $route_parts = explode('/', preg_replace('/\/$/', '', $route));
 $custom_routes = json_decode(CUSTOM_ROUTES, true);
 $args = array();
-
 // check custom routing (overrides default)
 foreach ($custom_routes as $app => $info) {
 	if (isset($info['pattern']) && preg_match($info['pattern'], $route, $matches)) {

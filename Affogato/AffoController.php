@@ -41,7 +41,8 @@ class AffoController extends AffoApplication
 			die("ERROR: NO MATCING ACTION");
 		}
 		$reflection = new ReflectionMethod($this, uriTo($action, 'action'));
-		if($reflection->getNumberOfRequiredParameters() != sizeof($args)) {
+		if($reflection->getNumberOfRequiredParameters() > sizeof($args) ||
+		   $reflection->getNumberOfParameters() < sizeof($args)) {
 			header("Status: 404 Not Found");
 			errorHandler('1');
 			exit();
