@@ -10,6 +10,7 @@ class AffoController extends AffoApplication
 		$this->name = str_replace('Controller', '', $this->reflection->name);
 		$this->var = array();
 		$this->get_vars = array();
+		$this->stylesheets = '';
 	}
 
 	function set($key, $value) {
@@ -31,6 +32,17 @@ class AffoController extends AffoApplication
 		}
 		else {
 			return NULL;
+		}
+	}
+	function css($stylesheet = NULL) {
+		if (isset($stylesheet)) {
+			$stylesheet = CSS_LOC . $stylesheet;
+			$link_html = "<link rel=\"stylesheet\" type=\"text/css\" href=\"$stylesheet\">\n";
+			$this->stylesheets .= $link_html;
+			return $link_html;
+		}
+		else {
+			return $this->stylesheets;
 		}
 	}
 	function routeCheck($action, $args) {
