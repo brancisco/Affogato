@@ -33,7 +33,9 @@ $class    = uriTo($data['app'], 'app_class');
 $file_name = APPS . "/{$data['app']}/{$app_file}";
 if (!file_exists($file_name)) {
 	header("Status: 404 Not Found");
-	die("ERROR: NO MATCHING APP FOUND");
+	// pass correct error for logging
+	errorHandler('1');
+	exit();
 }
 else {
 	include $file_name;

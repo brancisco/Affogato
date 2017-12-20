@@ -36,19 +36,22 @@ class AffoController extends AffoApplication
 	function routeCheck($action, $args) {
 		if (!method_exists($this, uriTo($action, 'action'))) {
 			header("Status: 404 Not Found");
+			errorHandler('1');
+			exit();
 			die("ERROR: NO MATCING ACTION");
 		}
 		$reflection = new ReflectionMethod($this, uriTo($action, 'action'));
 		if($reflection->getNumberOfRequiredParameters() != sizeof($args)) {
-			// give 404 error
 			header("Status: 404 Not Found");
+			errorHandler('1');
+			exit();
 			die("ERROR: NUM PARAMETERS DO NOT MATCH");
 		}
 		$file = uriTo($action, 'view');
 		if (!file_exists(APPS . "/{$this->name}/{$file}")) {
-			// give error no view
-			// log as internal error
 			header("Status: 404 Not Found");
+			errorHandler('1');
+			exit();
 			die("ERROR: NO VIEW");
 		}
 	}

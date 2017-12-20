@@ -42,5 +42,13 @@ function defaultRouting($route_array, $data, $index = 0) {
 	return defaultRouting($route_array, $data, $index+1);
 }
 
-// echo uriTo('shopping-cart', 'view');
+function errorHandler($err) {
+	if(file_exists(NOT_FOUND)) {
+		include NOT_FOUND;
+	}
+	else {
+		include DEFAULT_NOT_FOUND;
+	}
+}
+
 ?>
