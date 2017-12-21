@@ -33,7 +33,7 @@ function defaultRouting($route_array, $data, $index = 0) {
 	$uri = array_shift($route_array);
 	if($index == 0) {
 		if(!uriValid($uri, 'app')) {
-			header("Status: 404 Not Found");
+			header("HTTP/1.0 404 Not Found");
 			// pass correct error for logging
 			errorHandler('1');
 			exit();
@@ -42,7 +42,7 @@ function defaultRouting($route_array, $data, $index = 0) {
 	}
 	else if ($index == 1) {
 		if(!uriValid($uri, 'action')) {
-			header("Status: 404 Not Found");
+			header("HTTP/1.0 404 Not Found");
 			// pass correct error for logging
 			errorHandler('1');
 			exit();
@@ -51,7 +51,7 @@ function defaultRouting($route_array, $data, $index = 0) {
 	}
 	else {
 		if(!uriValid($uri, 'param')) {
-			header("Status: 404 Not Found");
+			header("HTTP/1.0 404 Not Found");
 			// pass correct error for logging
 			errorHandler('1');
 			exit();

@@ -31,7 +31,7 @@ $app_file = uriTo($data['app'], 'app_file');
 $class    = uriTo($data['app'], 'app_class');
 $file_name = APPS . "/{$data['app']}/{$app_file}";
 if (!file_exists($file_name)) {
-	header("Status: 404 Not Found");
+	header("HTTP/1.0 404 Not Found");
 	// pass correct error for logging
 	errorHandler('1');
 	exit();
