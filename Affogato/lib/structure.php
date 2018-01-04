@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/routing.php';
+require_once ROOT . '/Affogato/config.php';
+require_once ROOT . '/Affogato/lib/routing.php';
 
 function uriTo($uri, $type) {
 	if (!($type == 'app' || $type == 'action' || $type == 'param' ||
